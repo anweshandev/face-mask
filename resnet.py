@@ -1,5 +1,5 @@
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.applications import DenseNet201
+from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.layers import MaxPooling2D
 from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import Flatten
@@ -83,7 +83,8 @@ aug = ImageDataGenerator(
 	horizontal_flip=True,
 	fill_mode="nearest")
 
-dense_Model = DenseNet201(
+# Resnet50 -> Explanation?
+resnet_Model = ResNet50(
     weights="imagenet",
     include_top=False,
 	input_tensor=Input(shape=(224, 224, 3))
@@ -91,35 +92,40 @@ dense_Model = DenseNet201(
 
 # construct the head of the model that will be placed on top of the
 # the base model
-head_dense_Model = dense_Model.output
-# 224 / 32 = 7
-# TODO: Explaination needed?
-head_dense_Model = MaxPooling2D(pool_size=(7, 7))(head_dense_Model)
-# TODO: Explaination needed?
-head_dense_Model = Flatten(name="flatten")(head_dense_Model)
-# TODO: Explaination needed?
-head_dense_Model = Dense(128, activation="relu")(head_dense_Model)
-# TODO: Explaination needed?
-head_dense_Model = Dropout(0.5)(head_dense_Model)
-# TODO: Explaination needed?
-head_dense_Model = Dense(2, activation="softmax")(head_dense_Model)
 
-# TODO: Explaination needed?
-final_model = Model(inputs=dense_Model.input, outputs=head_dense_Model)
+head_resnet_Model = resnet_Model.output
+
+# TODO: Explanation needed?
+head_resnet_Model = MaxPooling2D(pool_size=(7, 7))(head_resnet_Model)
+
+# TODO: Explanation needed?
+head_resnet_Model = Flatten(name="flatten")(head_resnet_Model)
+
+# TODO: Explanation needed?
+head_resnet_Model = Dense(128, activation="relu")(head_resnet_Model)
+
+# TODO: Explanation needed?
+head_resnet_Model = Dropout(0.5)(head_resnet_Model)
+
+# TODO: Explanation needed?
+head_resnet_Model = Dense(2, activation="softmax")(head_resnet_Model)
+
+# TODO: Explanation needed?
+final_model = Model(inputs=resnet_Model.input, outputs=head_resnet_Model)
 
 # Layers
-for layer in dense_Model.layers:
-    # TODO: Explaination needed? Why false?
+for layer in resnet_Model.layers:
+    # TODO: Explanation needed? Why false?
 	layer.trainable = False
 
-# TODO: Explaination needed?
+# TODO: Explanation needed?
 opt = Adam(lr=intial_learning_rate, decay=(intial_learning_rate / epochs))
 
-
+# Explanation?
 model.compile(loss="binary_crossentropy", optimizer=opt,
 	metrics=["accuracy"])
 
-# TODO: Explaination needed?
+# TODO: Explanation needed?
 Head = final_model.fit(
 	aug.flow(trainX, trainY, batch_size=batch_size),
 	steps_per_epoch=len(trainX) // batch_size,
@@ -127,16 +133,16 @@ Head = final_model.fit(
 	validation_steps=len(testX) // batch_size,
 	epochs=epochs)
 
-# TODO: Explaination needed?
+# TODO: Explanation needed?
 predIdxs = final_model.predict(testX, batch_size=batch_size)
 
 # for each image in the testing set we need to find the index of the
 # label with corresponding largest predicted probability
-# TODO: Explaination needed?
+# TODO: Explanation needed?
 predIdxs = np.argmax(predIdxs, axis=1)
 
 # show a nicely formatted classification report
-# TODO: Explaination needed?
+# TODO: Explanation needed?
 print(classification_report(testY.argmax(axis=1), predIdxs,
 	target_names=lb.classes_))
 
