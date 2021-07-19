@@ -57,6 +57,7 @@ for category in categories:
       # Append the label for each image... at an index (x)
       labels.append(category)
 
+
 lb = LabelBinarizer()
 labels = lb.fit_transform(labels)
 # from tensorflow.keras.utils import to_categorical
@@ -89,27 +90,33 @@ dense_Model = DenseNet201(weights="imagenet", include_top=False,
 # the base model
 head_dense_Model = dense_Model.output
 # 224 / 32 = 7
+# TODO: Explaination needed?
 head_dense_Model = MaxPooling2D(pool_size=(7, 7))(head_dense_Model)
+# TODO: Explaination needed?
 head_dense_Model = Flatten(name="flatten")(head_dense_Model)
+# TODO: Explaination needed?
 head_dense_Model = Dense(128, activation="relu")(head_dense_Model)
+# TODO: Explaination needed?
 head_dense_Model = Dropout(0.5)(head_dense_Model)
+# TODO: Explaination needed?
 head_dense_Model = Dense(2, activation="softmax")(head_dense_Model)
 
-# Implement more models as required
+# TODO: Explaination needed?
 final_model = Model(inputs=dense_Model.input, outputs=head_dense_Model)
 
 # Layers
 for layer in dense_Model.layers:
+    # TODO: Explaination needed? Why false?
 	layer.trainable = False
 
-# 2D Optimizer
+# TODO: Explaination needed?
 opt = Adam(lr=intial_learning_rate, decay=(intial_learning_rate / epochs))
 
-#
+
 model.compile(loss="binary_crossentropy", optimizer=opt,
 	metrics=["accuracy"])
 
-# train the head of the network
+# TODO: Explaination needed?
 Head = final_model.fit(
 	aug.flow(trainX, trainY, batch_size=batch_size),
 	steps_per_epoch=len(trainX) // batch_size,
@@ -117,18 +124,21 @@ Head = final_model.fit(
 	validation_steps=len(testX) // batch_size,
 	epochs=epochs)
 
-# make predictions on the testing set
+# TODO: Explaination needed?
 predIdxs = final_model.predict(testX, batch_size=batch_size)
 
 # for each image in the testing set we need to find the index of the
 # label with corresponding largest predicted probability
+# TODO: Explaination needed?
 predIdxs = np.argmax(predIdxs, axis=1)
 
 # show a nicely formatted classification report
+# TODO: Explaination needed?
 print(classification_report(testY.argmax(axis=1), predIdxs,
 	target_names=lb.classes_))
 
-# serialize the model to disk
+# Save the model
+# evaluate(), save()
 model.save("mask_detector_densenet.model", save_format="h5")
 
 N = epochs
