@@ -4,12 +4,23 @@
 - Uploaded by Suhel Singh @ [https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1](https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1) which is publicly available
 
 ### Dataset making:
-- Based on `annotation_train.xml` used python to analyze file & simultaneously called upon `Google Drive API`, to pull all images.
+- Based on `annotation_train.txt` used python to analyze file & simultaneously called upon `Google Drive API`, to pull all images.
 
 #### OAuth 2.0 & it's Significance:
 - Registered client id and client secret [console.cloud.google.com](https://console.cloud.google.com). Follow google documentation.
 - Download and rename `client_secrets.json` and place it in parent folder.
 
+##### Procedure:
+1. Goto console.cloud.google.com
+2. Make a new project.
+3. Register an API Key against the same. Do not forget to configure your OAuth Screen with Scopes
+  - ./auth/userinfo.email
+  - ./auth/userinfo.profile
+  - ./auth/drive **Sensitive Scope**
+
+#### Folder 0 & 1:
+1. According to the dataset, class `0`, means all non-masked images.
+2. According to the dataset, class `1`, means all masked images.
 
 ### License
 
