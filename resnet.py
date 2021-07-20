@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
-from tensorflow.keras.applications import DenseNet201
+from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Dropout
@@ -83,7 +83,7 @@ aug = ImageDataGenerator(
     fill_mode="nearest")
 
 
-dense_Model = DenseNet201(
+dense_Model = ResNet50(
     weights="imagenet",
     include_top=False,
     input_tensor=Input(shape=(224, 224, 3))
