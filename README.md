@@ -1,7 +1,7 @@
 # Classification of mask and non masked faces using Deep Learning.
 
-### Dataset Link:
-- Uploaded by Suhel Singh @ [https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1](https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1) which is publicly available
+### Principle Dataset Link:
+Uploaded by Sunil Singh (sunil32123singh@gmail.com) - [https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1](https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1) which is publicly available. From this database we separate faces.
 
 ### Obtaining & Configuring the dataset (from Google Drive to Computer)
 
