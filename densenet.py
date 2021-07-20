@@ -40,13 +40,10 @@ labels = []
 
 for category in categories:
     path = os.path.join(dir, category)
+
     # Store as list
-    image_dir_list = os.listdir(path)
-    # Shuffle list
-    random.shuffle(image_dir_list)
-    length = int(0.8 * len(image_dir_list))
-    image_dir_list = image_dir_list[0:len]
-    for img in image_dir_list:
+
+    for img in os.listdir(path):
         path_img = os.path.join(path, img)
         print("Loading %s" % path_img)
         # see from tensorflow.keras.preprocessing.image import load_img
@@ -71,11 +68,11 @@ data = np.array(data, dtype="float32")
 # Converting labels to array
 labels = np.array(labels)
 
-# from sklearn.model_selection import train_test_split
-# Unpacking tuple to test-data vs test-labels
+# Dataset split w.r.t ratio.
 (trainX, testX, trainY, testY) = train_test_split(data, labels,
                                                   test_size=0.20, stratify=labels, random_state=42)
-
+# Data Augmentation
+# Extra sampling of images.
 aug = ImageDataGenerator(
     rotation_range=20,
     zoom_range=0.15,
@@ -84,6 +81,7 @@ aug = ImageDataGenerator(
     shear_range=0.15,
     horizontal_flip=True,
     fill_mode="nearest")
+
 
 dense_Model = DenseNet201(
     weights="imagenet",
@@ -95,23 +93,28 @@ dense_Model = DenseNet201(
 # the base model
 head_dense_Model = dense_Model.output
 # 224 / 32 = 7
-# TODO: Explaination needed?
+# Window create -> Shifting
 head_dense_Model = MaxPooling2D(pool_size=(7, 7))(head_dense_Model)
-# TODO: Explaination needed?
+
+# Feature Map flatted to 1D Formation
 head_dense_Model = Flatten(name="flatten")(head_dense_Model)
-# TODO: Explaination needed?
+
+# Action Function = RELU.. (Possibility)... Image Thresholding (Function making)
+# Rectified Linear Unit
 head_dense_Model = Dense(128, activation="relu")(head_dense_Model)
-# TODO: Explaination needed?
+
+# Dropout -> 1/2 is expunged [It is a bias]
 head_dense_Model = Dropout(0.5)(head_dense_Model)
-# TODO: Explaination needed?
+
+# Max=[0, MAX] (Binary Classification)
 head_dense_Model = Dense(2, activation="softmax")(head_dense_Model)
 
-# TODO: Explaination needed?
+
 model = Model(inputs=dense_Model.input, outputs=head_dense_Model)
 
 # Layers
 for layer in dense_Model.layers:
-    # TODO: Explaination needed? Why false?
+    # Freezing so that a pre-set model at transfer learning ....
     layer.trainable = False
 
 # TODO: Explaination needed?
@@ -143,7 +146,8 @@ print(classification_report(testY.argmax(axis=1), predIdxs,
 
 # Save the model
 # evaluate(), save()
-model.save("mask_detector_densenet.model", save_format="h5")
+models_path = os.path.join(os.path.abspath("models"), "mask_detector_densenet.model")
+model.save(models_path, save_format="h5")
 
 N = epochs
 plt.style.use("ggplot")
