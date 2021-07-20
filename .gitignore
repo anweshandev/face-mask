@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Some secrets (API Related)
 token.pickle
 client_secrets.json
@@ -276,4 +275,3 @@ dmypy.json
 
 # PyChecker Ingore Dir
 .idea/
->>>>>>> 149d7ccde600b4a4ae871ba329677f208afaa634
