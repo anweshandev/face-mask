@@ -7,7 +7,7 @@ import cv2
 
 from googleapiclient.http import MediaIoBaseDownload
 
-from face import Image, GFile
+from model import Image, GFile
 
 # For google client imports
 import google
