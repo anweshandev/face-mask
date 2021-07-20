@@ -3,24 +3,34 @@
 ### Dataset Link:
 - Uploaded by Suhel Singh @ [https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1](https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1) which is publicly available
 
-### Dataset making:
-- Based on `annotation_train.txt` used python to analyze file & simultaneously called upon `Google Drive API`, to pull all images.
+### Obtaining & Configuring the dataset (from Google Drive to Computer)
 
-#### OAuth 2.0 & it's Significance:
-- Registered client id and client secret [console.cloud.google.com](https://console.cloud.google.com). Follow google documentation.
-- Download and rename `client_secrets.json` and place it in parent folder.
+##### Steps:
 
-##### Procedure:
-1. Goto console.cloud.google.com
-2. Make a new project.
-3. Register an API Key against the same. Do not forget to configure your OAuth Screen with Scopes
-  - ./auth/userinfo.email
-  - ./auth/userinfo.profile
-  - ./auth/drive **Sensitive Scope**
+1. **Use:** `pip install google-api-python-client`.
+2. **Please refer to the Google Documentation on OAuth 2.0 & Drive API v3.**
+3. **Please enter:** `http://localhost:8080/` as a `redirect_uri` in the cloud console of Google for your Client ID & Secret Pair.
+4. **Please set up:** the OAuth 2.0 screen with one of the sensitive scopes as `./auth/drive` for full access to **Google Drive API**.
 
-#### Folder 0 & 1:
-1. According to the dataset, class `0`, means all non-masked images.
-2. According to the dataset, class `1`, means all masked images.
+After registering the client keys please do not forget to download and save `client_secrets.json`, at the same path as your program. That section is uploaded to [https://github.com/formula21/face-mask/blob/main/croppie.py](https://github.com/formula21/face-mask/blob/main/croppie.py).
+
+##### Other notes:
+
+1. The `imagebuffer` once stored as a file, stays on your computer, unless you define the `FLAG_UPLOAD = true` and `FLAG_UPLOAD_PARENT_ID = [None, None] or [str, str]`.
+  - If either `None` is defined,  a **new folder** with the names `with_mask` and `without_mask` are created or the id's are used to upload. If a failure of finding the directories in drive, the program terminates with an Exception.
+  - If either or both are found, we will send the buffer immediately to upload.
+2. By default, the file is supposed to be also saved locally, however this can be omitted by defining `FLAG_DOWNLOAD_AND_SAVE = false`.
+
+### Google Drive Authorization
+
+We are authorizing Google Colab with Google Drive for us to get access to our dataset. This authorization is native to Google's Documentation.
+
+**Please note:** You need to change the variable `dir` below to the appropriate path. If you are using a "Shared With Me" folder please set up a "Add Shortcut to Drive", to set shortcut and get easy access to &ldquo;My Drive&rdquo;.
+
+
+### Jupyter Notebook & Google Colab
+
+For training the model, the system did not have enough memory. We had to write a modified code on Google Colab, only to train & test the model.
 
 ### License
 
