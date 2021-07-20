@@ -22,6 +22,8 @@ from googleapiclient.discovery import build
 SCOPES: List[Union[str, Any]] = ['userinfo.email', 'userinfo.profile', 'drive']
 MAIN_URL: str = 'https://www.googleapis.com/auth/'
 
+# TODO: Upload Algorithm
+# Parent ID of Folder to Upload.
 
 def analyzeAnnotations(file: str = 'annotations_train.txt') -> Union[List, None]:
     dataset = []
