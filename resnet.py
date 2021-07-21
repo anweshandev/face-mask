@@ -1,13 +1,10 @@
 import os
 import random
-
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
-from tensorflow.keras.applications import ResNet50
-from tensorflow.keras.applications.resnet50 import preprocess_input
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import Flatten
@@ -19,39 +16,30 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.preprocessing.image import load_img
 from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.applications import ResNet50
+from tensorflow.keras.applications.resnet50 import preprocess_input as resnet50_preprocess_input
+from tensorflow.keras.layers import AveragePooling2D
 
-# Initial learning rate, can be extended
-intial_learning_rate = 1e-4
-
-# number of epochs to train
-epochs = 45  # @param {type:"slider", min:20, max:100, step:5}
-
-# The size of the batch to train on
-batch_size = 4  # @param {type:"slider", min:4, max:100, step:4}
-
-# Directory
-dir: str = os.path.abspath(os.getcwd())
-
-categories = ["with_mask", "without_mask"]
-
-# Data Variables
 data = []
 labels = []
 
+batch_size = 45
+intial_learning_rate = 0.003
+epoch = 20
+
+categories = ["with_mask", "without_mask"]
+
 for category in categories:
     path = os.path.join(dir, category)
-
-    # Store as list
-
-    for img in os.listdir(path):
+    for img in os.listdir(path)
         path_img = os.path.join(path, img)
-        print("Loading %s" % path_img)
+        print("Loading %d out of %d in %s" % ((i+1), len(x), category))
         # see from tensorflow.keras.preprocessing.image import load_img
         image = load_img(path_img, target_size=(224, 224))
         # from tensorflow.keras.preprocessing.image import img_to_array
         image = img_to_array(image)
         # from tensorflow.keras.applications.* import preprocess_input
-        image = preprocess_input(image)
+        image = resnet50_preprocess_input(image)
         # Append the image at index (x)
         data.append(image)
         # Append the label for each image... at an index (x)
@@ -82,8 +70,7 @@ aug = ImageDataGenerator(
     horizontal_flip=True,
     fill_mode="nearest")
 
-
-dense_Model = ResNet50(
+resnet_model = ResNet50(
     weights="imagenet",
     include_top=False,
     input_tensor=Input(shape=(224, 224, 3))
@@ -91,29 +78,29 @@ dense_Model = ResNet50(
 
 # construct the head of the model that will be placed on top of the
 # the base model
-head_dense_Model = dense_Model.output
+resnet_head_model = resnet_model.output
 # 224 / 32 = 7
 # Window create -> Shifting
-head_dense_Model = MaxPooling2D(pool_size=(7, 7))(head_dense_Model)
+resnet_head_model = AveragePooling2D(pool_size=(7, 7))(resnet_head_model)
 
 # Feature Map flatted to 1D Formation
-head_dense_Model = Flatten(name="flatten")(head_dense_Model)
+resnet_head_model = Flatten(name="flatten")(resnet_head_model)
 
 # Action Function = RELU.. (Possibility)... Image Thresholding (Function making)
 # Rectified Linear Unit
-head_dense_Model = Dense(128, activation="relu")(head_dense_Model)
+resnet_head_model = Dense(128, activation="relu")(resnet_head_model)
 
 # Dropout -> 1/2 is expunged [It is a bias]
-head_dense_Model = Dropout(0.5)(head_dense_Model)
+resnet_head_model = Dropout(0.5)(resnet_head_model)
 
 # Max=[0, MAX] (Binary Classification)
-head_dense_Model = Dense(2, activation="softmax")(head_dense_Model)
+resnet_head_model = Dense(2, activation="softmax")(resnet_head_model)
 
 
-model = Model(inputs=dense_Model.input, outputs=head_dense_Model)
+model = Model(inputs=resnet_model.input, outputs=resnet_head_model)
 
 # Layers
-for layer in dense_Model.layers:
+for layer in resnet_model.layers:
     # Freezing so that a pre-set model at transfer learning ....
     layer.trainable = False
 
@@ -124,7 +111,7 @@ model.compile(loss="binary_crossentropy", optimizer=opt,
               metrics=["accuracy"])
 
 # TODO: Explaination needed?
-Head = model.fit(
+resnet_head = model.fit(
     aug.flow(trainX, trainY, batch_size=batch_size),
     steps_per_epoch=len(trainX) // batch_size,
     validation_data=(testX, testY),
@@ -146,18 +133,19 @@ print(classification_report(testY.argmax(axis=1), predIdxs,
 
 # Save the model
 # evaluate(), save()
-models_path = os.path.join(os.path.abspath("models"), "mask_detector_resnet.model")
+models_path = os.path.join(os.path.abspath("models"), "resnet.model")
 model.save(models_path, save_format="h5")
 
 N = epochs
 plt.style.use("ggplot")
 plt.figure()
-plt.plot(np.arange(0, N), Head.history["loss"], label="train_loss")
-plt.plot(np.arange(0, N), Head.history["val_loss"], label="val_loss")
-plt.plot(np.arange(0, N), Head.history["accuracy"], label="train_acc")
-plt.plot(np.arange(0, N), Head.history["val_accuracy"], label="val_acc")
+plt.plot(np.arange(0, N), resnet_head.history["loss"], label="train_loss")
+plt.plot(np.arange(0, N), resnet_head.history["val_loss"], label="val_loss")
+plt.plot(np.arange(0, N), resnet_head.history["accuracy"], label="train_acc")
+plt.plot(np.arange(0, N), resnet_head.history["val_accuracy"], label="val_acc")
 plt.title("Training Loss and Accuracy")
 plt.xlabel("Epoch #")
 plt.ylabel("Loss/Accuracy")
 plt.legend(loc="lower left")
-plt.savefig("plot_resnet.png")
+plot_path = os.path.join(os.path.abspath("plots"), "resnet.png")
+plt.savefig(plot_path)

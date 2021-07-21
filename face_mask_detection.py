@@ -44,7 +44,6 @@ import os
 drive.mount('/content/drive', force_remount=True)
 
 # Directory (Please make appropiate changes)
-dir = '/content/drive/MyDrive/College/Sem 6/Project_FACE_MASK/fm_detector/dataset'
 
 # Please make changes here.
 if not os.path.isdir('/content/models'):
@@ -52,6 +51,13 @@ if not os.path.isdir('/content/models'):
 
 if not os.path.isdir('/content/plot'):
    os.mkdir('/content/plot')
+
+"""#### Directory
+
+We declare a variable `dir` independently, so that we can change the parent part as and when required.
+"""
+
+dir = '/content/drive/MyDrive/College/Sem 6/Project_FACE_MASK/fm_detector/dataset'
 
 """## Section 1 ~ Convoluted Neural Networks
 
@@ -62,8 +68,13 @@ We are introducing here 3 types of CNN to compare between their models.
 3. MobilenetV2
 
 As most libraries are common, we try to import these all at once.
+
+### Section 1.0: Pre Associating the images
+
+We import all images from the required dir, sort them according to labels and append them to a list. These images can be then passed to the `preprocess_input` function of the individual neural network libraries.
 """
 
+import os
 import random
 import matplotlib.pyplot as plt
 import numpy as np
@@ -74,7 +85,8 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import Input
-from tensorflow.keras.layers import MaxPooling2D
+# from tensorflow.keras.layers import MaxPooling2D
+from tensorflow.keras.layers import AveragePooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -96,10 +108,14 @@ categories = ["with_mask", "without_mask"]
 img_to_arr = []
 
 for category in categories:
-    path = os.path.join(dir, category) 
-    for img in os.listdir(path):
+    path = os.path.join(dir, category)
+    x = os.listdir(path)
+    if category == "without_mask":
+       x = x[0:int(0.3 * len(x))]
+    for i in range(0, len(x)):
+        img = x[i]
         path_img = os.path.join(path, img)
-        print("Loading %s" % path_img)
+        print("Loading %d out of %d in %s" % ((i+1), len(x), category))
         # see from tensorflow.keras.preprocessing.image import load_img
         image = load_img(path_img, target_size=(224, 224))
         # from tensorflow.keras.preprocessing.image import img_to_array
@@ -126,8 +142,12 @@ from tensorflow.keras.applications.resnet50 import preprocess_input as resnet50_
 data = []
 labels = []
 
-for img in img_to_arr.append:
-  image, category = img.image, img.category
+batch_size = 45
+intial_learning_rate = 0.003
+epoch = 20
+
+for img in img_to_arr:
+  image, category = img['image'], img['category']
   # from tensorflow.keras.applications.* import preprocess_input
   image = resnet50_preprocess_input(image)
   # Append the image at index (x)
@@ -171,7 +191,7 @@ resnet_model = ResNet50(
 resnet_head_model = resnet_model.output
 # 224 / 32 = 7
 # Window create -> Shifting
-resnet_head_model = MaxPooling2D(pool_size=(7, 7))(resnet_head_model)
+resnet_head_model = AveragePooling2D(pool_size=(7, 7))(resnet_head_model)
 
 # Feature Map flatted to 1D Formation
 resnet_head_model = Flatten(name="flatten")(resnet_head_model)
@@ -237,7 +257,7 @@ plt.title("Training Loss and Accuracy")
 plt.xlabel("Epoch #")
 plt.ylabel("Loss/Accuracy")
 plt.legend(loc="lower left")
-plot_path = os.path.join(os.path.abspath("models"), "resnet.png")
+plot_path = os.path.join(os.path.abspath("plot"), "resnet.png")
 plt.savefig(plot_path)
 
 """### Section 1.2: DenseNet 201
@@ -250,8 +270,16 @@ from tensorflow.keras.applications.densenet import preprocess_input as densenet_
 data = []
 labels = []
 
-for img in img_to_arr.append:
-  image, category = img.image, img.category
+# Initial learning rate, can be extended
+intial_learning_rate = 1e-4
+
+# number of epochs to train
+epochs = 10
+
+batch_size = 18
+
+for img in img_to_arr:
+  image, category = img['image'], img['category']
   # from tensorflow.keras.applications.* import preprocess_input
   image = densenet_preprocess_input(image)
   # Append the image at index (x)
@@ -295,7 +323,7 @@ dense_model = DenseNet201(
 dense_head_model = dense_model.output
 # 224 / 32 = 7
 # Window create -> Shifting
-dense_head_model = MaxPooling2D(pool_size=(7, 7))(dense_head_model)
+dense_head_model = AveragePooling2D(pool_size=(7, 7))(dense_head_model)
 
 # Feature Map flatted to 1D Formation
 dense_head_model = Flatten(name="flatten")(dense_head_model)
@@ -361,5 +389,137 @@ plt.title("Training Loss and Accuracy")
 plt.xlabel("Epoch #")
 plt.ylabel("Loss/Accuracy")
 plt.legend(loc="lower left")
-plot_path = os.path.join(os.path.abspath("models"), "resnet.png")
+plot_path = os.path.join(os.path.abspath("plot"), "densenet.png")
+plt.savefig(plot_path)
+
+"""### Section 1.3: MobileNet v2
+
+"""
+
+from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobilenet_v2_preprocess_input
+
+data = []
+labels = []
+
+# Initial learning rate, can be extended
+intial_learning_rate = 1e-4
+
+# number of epochs to train
+epochs = 45
+
+batch_size = 4
+
+for img in img_to_arr:
+  image, category = img['image'], img['category']
+  # from tensorflow.keras.applications.* import preprocess_input
+  image = mobilenet_v2_preprocess_input(image)
+  # Append the image at index (x)
+  data.append(image)
+  # Append the label for each image... at an index (x)
+  labels.append(category)
+
+lb = LabelBinarizer()
+labels = lb.fit_transform(labels)
+# from tensorflow.keras.utils import to_categorical
+labels = to_categorical(labels)
+
+# Setting the data (images) to pixels of float32
+data = np.array(data, dtype="float32")
+
+# Converting labels to array
+labels = np.array(labels)
+
+# Dataset split w.r.t ratio.
+(trainX, testX, trainY, testY) = train_test_split(data, labels,
+                                                  test_size=0.20, stratify=labels, random_state=42)
+# Data Augmentation
+# Extra sampling of images.
+aug = ImageDataGenerator(
+    rotation_range=20,
+    zoom_range=0.15,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.15,
+    horizontal_flip=True,
+    fill_mode="nearest")
+
+mobile_model = MobileNetV2(
+    weights="imagenet",
+    include_top=False,
+    input_tensor=Input(shape=(224, 224, 3))
+)
+
+# construct the head of the model that will be placed on top of the
+# the base model
+mobile_head_model = mobile_model.output
+# 224 / 32 = 7
+# Window create -> Shifting
+mobile_head_model = AveragePooling2D(pool_size=(7, 7))(mobile_head_model)
+
+# Feature Map flatted to 1D Formation
+mobile_head_model = Flatten(name="flatten")(mobile_head_model)
+
+# Action Function = RELU.. (Possibility)... Image Thresholding (Function making)
+# Rectified Linear Unit
+mobile_head_model = Dense(128, activation="relu")(mobile_head_model)
+
+# Dropout -> 1/2 is expunged [It is a bias]
+mobile_head_model = Dropout(0.5)(mobile_head_model)
+
+# Max=[0, MAX] (Binary Classification)
+mobile_head_model = Dense(2, activation="softmax")(mobile_head_model)
+
+
+model = Model(inputs=mobile_model.input, outputs=mobile_head_model)
+
+# Layers
+for layer in mobile_model.layers:
+    # Freezing so that a pre-set model at transfer learning ....
+    layer.trainable = False
+
+# TODO: Explaination needed?
+opt = Adam(lr=intial_learning_rate, decay=(intial_learning_rate / epochs))
+
+model.compile(loss="binary_crossentropy", optimizer=opt,
+              metrics=["accuracy"])
+
+# TODO: Explaination needed?
+mobile_head = model.fit(
+    aug.flow(trainX, trainY, batch_size=batch_size),
+    steps_per_epoch=len(trainX) // batch_size,
+    validation_data=(testX, testY),
+    validation_steps=len(testX) // batch_size,
+    epochs=epochs)
+
+# TODO: Explaination needed?
+predIdxs = model.predict(testX, batch_size=batch_size)
+
+# for each image in the testing set we need to find the index of the
+# label with corresponding largest predicted probability
+# TODO: Explaination needed?
+predIdxs = np.argmax(predIdxs, axis=1)
+
+# show a nicely formatted classification report
+# TODO: Explaination needed?
+print(classification_report(testY.argmax(axis=1), predIdxs,
+                            target_names=lb.classes_))
+
+# Save the model
+# evaluate(), save()
+models_path = os.path.join(os.path.abspath("models"), "mobilenet.model")
+model.save(models_path, save_format="h5")
+
+N = epochs
+plt.style.use("ggplot")
+plt.figure()
+plt.plot(np.arange(0, N), mobile_head.history["loss"], label="train_loss")
+plt.plot(np.arange(0, N), mobile_head.history["val_loss"], label="val_loss")
+plt.plot(np.arange(0, N), mobile_head.history["accuracy"], label="train_acc")
+plt.plot(np.arange(0, N), mobile_head.history["val_accuracy"], label="val_acc")
+plt.title("Training Loss and Accuracy")
+plt.xlabel("Epoch #")
+plt.ylabel("Loss/Accuracy")
+plt.legend(loc="lower left")
+plot_path = os.path.join(os.path.abspath("plot"), "mobilenet.png")
 plt.savefig(plot_path)
