@@ -96,7 +96,7 @@ Epoch 45/45
               precision    recall  f1-score   support
 
    with_mask       0.96      0.95      0.95       377
-without_mask       0.97      0.98      0.97       634
+without_mask       0.97      0.98      0.97      2114
 
     accuracy                           0.97      1011
    macro avg       0.96      0.96      0.96      1011
