@@ -31,7 +31,9 @@ categories = ["with_mask", "without_mask"]
 
 for category in categories:
     path = os.path.join(dir, category)
-    for img in os.listdir(path)
+    x = os.listdir(path)
+    i = 0
+    for img in x:
         path_img = os.path.join(path, img)
         print("Loading %d out of %d in %s" % ((i+1), len(x), category))
         # see from tensorflow.keras.preprocessing.image import load_img
@@ -105,7 +107,7 @@ for layer in densenet_model.layers:
     layer.trainable = False
 
 # TODO: Explaination needed?
-opt = Adam(lr=intial_learning_rate, decay=(intial_learning_rate / epochs))
+opt = Adam(lr=intial_learning_rate, decay=(intial_learning_rate / epoch))
 
 model.compile(loss="binary_crossentropy", optimizer=opt,
               metrics=["accuracy"])
@@ -116,7 +118,7 @@ densenet_head = model.fit(
     steps_per_epoch=len(trainX) // batch_size,
     validation_data=(testX, testY),
     validation_steps=len(testX) // batch_size,
-    epochs=epochs)
+    epochs=epoch)
 
 # TODO: Explaination needed?
 predIdxs = model.predict(testX, batch_size=batch_size)
@@ -136,7 +138,7 @@ print(classification_report(testY.argmax(axis=1), predIdxs,
 models_path = os.path.join(os.path.abspath("models"), "densenet.model")
 model.save(models_path, save_format="h5")
 
-N = epochs
+N = epoch
 plt.style.use("ggplot")
 plt.figure()
 plt.plot(np.arange(0, N), densenet_head.history["loss"], label="train_loss")

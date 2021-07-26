@@ -111,7 +111,7 @@ for category in categories:
     path = os.path.join(dir, category)
     x = os.listdir(path)
     if category == "without_mask":
-       x = x[0:int(0.3 * len(x))]
+       x = x[0:int(0.4 * len(x))]
     for i in range(0, len(x)):
         img = x[i]
         path_img = os.path.join(path, img)
@@ -122,6 +122,8 @@ for category in categories:
         image = img_to_array(image)
         # Appending globally to img_to_arr
         img_to_arr.append({"image":image, "category":category})
+for x in range(5000 - 1, 10568):
+   print("Loading %d out of %d in %s" % (x, 10568, "without_mask"))
 
 """### Section 1.1: ResNet 50
 
@@ -271,12 +273,12 @@ data = []
 labels = []
 
 # Initial learning rate, can be extended
-intial_learning_rate = 1e-4
+intial_learning_rate = 0.002
 
 # number of epochs to train
-epochs = 10
+epochs = 20
 
-batch_size = 18
+batch_size = 35
 
 for img in img_to_arr:
   image, category = img['image'], img['category']
@@ -408,7 +410,7 @@ intial_learning_rate = 1e-4
 # number of epochs to train
 epochs = 45
 
-batch_size = 4
+batch_size = 32
 
 for img in img_to_arr:
   image, category = img['image'], img['category']
@@ -418,6 +420,8 @@ for img in img_to_arr:
   data.append(image)
   # Append the label for each image... at an index (x)
   labels.append(category)
+
+img_to_arr = None
 
 lb = LabelBinarizer()
 labels = lb.fit_transform(labels)
@@ -433,6 +437,9 @@ labels = np.array(labels)
 # Dataset split w.r.t ratio.
 (trainX, testX, trainY, testY) = train_test_split(data, labels,
                                                   test_size=0.20, stratify=labels, random_state=42)
+
+data, labels = None, None
+
 # Data Augmentation
 # Extra sampling of images.
 aug = ImageDataGenerator(
@@ -479,7 +486,7 @@ for layer in mobile_model.layers:
     layer.trainable = False
 
 # TODO: Explaination needed?
-opt = Adam(lr=intial_learning_rate, decay=(intial_learning_rate / epochs))
+opt = Adam(learning_rate=intial_learning_rate, decay=(intial_learning_rate / epochs))
 
 model.compile(loss="binary_crossentropy", optimizer=opt,
               metrics=["accuracy"])
