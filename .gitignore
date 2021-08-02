@@ -3,6 +3,8 @@ token.pickle
 client_secrets.json
 without_mask/
 with_mask/
+without_mask_raw/
+with_mask_raw/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

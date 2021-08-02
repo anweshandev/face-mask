@@ -156,5 +156,16 @@ if __name__ == '__main__':
         # TMP IMG
         tmpImg = ioToImage(download)
 
-        print(img.getPath())
+        maskDir, unmaskDir, name, faces = os.path.abspath('with_mask_raw'), os.path.abspath('without_mask_raw'), obj.getPath(), obj.getFaces()
+
+        faces = None
+
+        d = maskDir if faces[f].isMasked() else unmaskDir
+        d = os.path.join(d, name)
+
+        if os.path.exists(d):
+            os.remove(d)
+
+        cv2.imwrite(d, tmpImg)
+
         exit(0)
