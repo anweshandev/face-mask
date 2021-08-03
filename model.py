@@ -92,12 +92,24 @@ class Image:
     def __init__(self):
         self.path = None
         self.face = []
+        self.folder = None
+        self.same = False
 
     def setFaces(self, *face: Union[Any]):
+        first, masked, same = True, False, True
         for f in face:
             fx = tuple(f.split(','))
             face = Face()
             face.setAll(*fx)
+            if first:
+                masked = face.isMasked() # False (store) # True
+                self.folder = face.isMasked()
+                first = False
+                same = True
+            else:
+                if same and not masked is face.isMasked():
+                    same = False
+            self.same = same
             self.setFace(face)
 
     def setFace(self, face: Union[Face, None]):
@@ -125,3 +137,9 @@ class Image:
 
     def getPath(self):
         return self.path
+
+    def getSame(self):
+        return self.same
+
+    def getFolder(self):
+        return self.folder

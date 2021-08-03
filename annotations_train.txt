@@ -1,3 +1,4 @@
+/content/train/train2/test_00004170.jpg 514,390,677,536,1 412,103,469,178,0 103,527,191,619,0
 /content/train/train2/49_Greeting_peoplegreeting_49_152.jpg 701,288,730,316,0 690,183,705,200,0 819,177,839,200,0
 /content/train/train2/test_00004510.jpg 327,123,491,320,1
 /content/train/train2/31_Waiter_Waitress_Waiter_Waitress_31_128.jpg 304,144,442,326,0 698,240,802,412,0
