@@ -82,8 +82,10 @@ if __name__ == '__main__':
     maskNet = load_model(r"models\mobilenet.model")
 
     # initialize the video stream
-    print("[INFO] starting video stream...")
-    vs = VideoStream(src=0).start()
+    print("[INFO] Starting Video Stream...")
+    # 0 -> Your Webcam
+    # 1 -> Direct Server IP Address
+    vs = VideoStream(src='http://192.168.1.7:6888/video/live.mjpg').start()
 
     # loop over the frames from the video stream
     while True:
