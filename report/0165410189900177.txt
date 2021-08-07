@@ -1,0 +1,11 @@
+Shaohua Wan, Yan Liang, Yin Zhang,
+Deep convolutional neural networks for diabetic retinopathy detection by image classification,
+Computers & Electrical Engineering,
+Volume 72,
+2018,
+Pages 274-282,
+ISSN 0045-7906,
+https://doi.org/10.1016/j.compeleceng.2018.07.042.
+(https://www.sciencedirect.com/science/article/pii/S0045790618302556)
+Abstract: Diabetic retinopathy (DR) is a common complication of diabetes and one of the major causes of blindness in the active population. Many of the complications of DR can be prevented by blood glucose control and timely treatment. Since the varieties and the complexities of DR, it is really difficult for DR detection in the time-consuming manual diagnosis. This paper is to attempt towards finding an automatic way to classify a given set of fundus images. We bring convolutional neural networks (CNNs) power to DR detection, which includes 3 major difficult challenges: classification, segmentation and detection. Coupled with transfer learning and hyper-parameter tuning, we adopt AlexNet, VggNet, GoogleNet, ResNet, and analyze how well these models do with the DR image classification. We employ publicly available Kaggle platform for training these models. The best classification accuracy is 95.68% and the results have demonstrated the better accuracy of CNNs and transfer learning on DR image classification.
+Keywords: Diabetic retinopathy; Fundus images classification; Convolutional neural networks; Transfer learning

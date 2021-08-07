@@ -124,7 +124,9 @@ def ioToImage(image_stream):
 if __name__ == '__main__':
     # Parent ID (train2)
     parent = '1gbDcWb_YRzkCS3OaBA5zOdQfKr68yN8z'
-
+    
+    count = 0
+    
     db = analyzeAnnotations()
     if not db:
         print("Dataset incorrectly analyzed. Check!!")
@@ -158,5 +160,10 @@ if __name__ == '__main__':
 
         maskDir, unmaskDir, name, faces = os.path.abspath('with_mask_raw'), os.path.abspath('without_mask_raw'), img.getPath(), img.getFaces()
 
-        if(img.countFace() == 1 or img.getSame()):
-            cv2.imwrite(os.path.join(unmaskDir if img.getFolder() else maskDir, name), tmpImg)
+        if (img.countFace() == 1 or img.getSame()):
+            # cv2.imwrite(os.path.join(unmaskDir if img.getFolder() else maskDir, name), tmpImg)
+            pass
+        else:
+            count = count + 1
+        
+    print("The number of dual class images = ",count)
