@@ -85,8 +85,8 @@ if __name__ == '__main__':
     print("[INFO] Starting Video Stream...")
     # 0 -> Your Webcam
     # 1 -> Direct Server IP Address
-    vs = VideoStream(src='http://192.168.1.7:6888/video/live.mjpg').start()
-
+    # You can really have a video here.
+    vs = VideoStream(src=0).start()
     # loop over the frames from the video stream
     while True:
         # grab the frame from the threaded video stream and resize it
@@ -111,7 +111,7 @@ if __name__ == '__main__':
             color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
 
             # include the probability in the label
-            label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
+            # label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
 
             # display the label and bounding box rectangle on the output
             # frame
@@ -120,7 +120,7 @@ if __name__ == '__main__':
             cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
 
         # show the output frame
-        cv2.imshow("Frame", frame)
+        cv2.imshow("Realtime Video Stream", frame)
         key = cv2.waitKey(1) & 0xFF
 
         # if the `q` key was pressed, break from the loop

@@ -32,7 +32,7 @@ batch_size = 4
 
 for category in categories:
     path = os.path.join(dir, category)
-    for img in os.listdir(path)
+    for img in os.listdir(path):
         path_img = os.path.join(path, img)
         print("Loading %d out of %d in %s" % ((i+1), len(x), category))
         # see from tensorflow.keras.preprocessing.image import load_img

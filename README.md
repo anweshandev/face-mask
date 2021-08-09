@@ -1,5 +1,7 @@
 # Classification of Masked and Unmasked Faces using Transfer Learning Concept.
 
+[![CodeQL](https://github.com/formula21/face-mask/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/formula21/face-mask/actions/workflows/codeql-analysis.yml)
+
 ### Principle Dataset Link:
 Uploaded by Sunil Singh (sunil32123singh@gmail.com) - [https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1](https://drive.google.com/drive/folders/1pAxEBmfYLoVtZQlBT3doxmesAO7n3ES1) which is publicly available. From this database we separate faces.
 
