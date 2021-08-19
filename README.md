@@ -39,7 +39,7 @@ For training the model, the system did not have enough memory. We had to write a
 `The project is licensed with an open source license from MIT. A copy of this license should be there exported with every copy of the library you clone or download. However the license reads as follows:`
 
 
-> Copyright (c) 2021 Memo Karpa <memokarpa001@gmail.com>, Anweshan Roy Chowdhury <anweshanrc15@gmail.com>, Sayon Roy <roysayon2000@gmail.com>,  Subhajit Majumdar <subhajitmajumdar56@gmail.com>.
+> Copyright (c) 2021 Anweshan Roy Chowdhury <anweshanrc15@gmail.com>, Sayon Roy <roysayon2000@gmail.com>.
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal

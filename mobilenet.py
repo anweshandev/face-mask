@@ -21,6 +21,7 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobil
 
 data = []
 labels = []
+categories = ['with_mask', 'without_mask']
 
 # Initial learning rate, can be extended
 intial_learning_rate = 1e-4

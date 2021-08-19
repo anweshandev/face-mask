@@ -1,6 +1,6 @@
 ## MIT License
 
-> Copyright (c) 2021 Memo Karpa <memokarpa001@gmail.com>, Anweshan Roy Chowdhury <anweshanrc15@gmail.com>, Sayon Roy <roysayon2000@gmail.com>,  Subhajit Majumdar <subhajitmajumdar56@gmail.com>.
+> Copyright (c) 2021 Anweshan Roy Chowdhury <anweshanrc15@gmail.com>, Sayon Roy <roysayon2000@gmail.com>.
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
